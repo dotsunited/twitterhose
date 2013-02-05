@@ -1,0 +1,21 @@
+{
+    "license": "MIT",
+    "authors": [
+        {"name": "Marco Kaul", "email": "marco@dotsunited.de"},
+        {"name": "Sergej Lotz", "email": "sergej@dotsunited.de"},
+        {"name": "Jan Sorgalla", "email": "jan@dotsunited.de"}
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "react/http-client": "~0.2",
+        "react/zmq": "~0.1",
+        "cboden/Ratchet": "~0.2",
+        "psr/log": "~1.0",
+        "monolog/monolog": "~1.3"
+    },
+    "autoload": {
+        "psr-0": {
+            "": "src/"
+        }
+    }
+}
