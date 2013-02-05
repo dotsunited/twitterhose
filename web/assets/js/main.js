@@ -1,1 +1,1 @@
-(function(n){n(function(){})})(jQuery,window);
+(function(n,e){n(function(){e.WEB_SOCKET_SWF_LOCATION="/assets/swf/WebSocketMain.swf";var s=function(e){n("#messages").append(e+"\n")},o=new WebSocket("ws://localhost:1337/");o.onerror=function(n){s("Error",n)},o.onopen=function(){s("Connected"),n("#sendmessage").on("submit",function(e){e.preventDefault(),o.send(n("#message",this).val()),n("#message",this).val("")})},o.onmessage=function(n){s("Message: "+n.data)},o.onclose=function(){s("Disconnected")}})})(jQuery,window);
