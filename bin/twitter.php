@@ -63,7 +63,7 @@ $request->on('response', function ($response) use ($zmqSocket, &$buffer, $logger
 });
 
 $request->on('end', function ($error) use ($logger) {
-    $logger->info('Connection closed with "' . $error . '"');
+    $logger->error('Connection closed with "' . $error . '"');
 });
 
 $request->end();
