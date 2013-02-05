@@ -1,0 +1,108 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <script src="assets/js/vendor/modernizr-2.6.2.min.js"></script>
+        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.css" />
+        <!--[if lte IE 8]>
+            <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.ie.css" />
+        <![endif]-->
+        <style>
+            html, body { margin: 0; padding: 0; width: 100%; height: 100%; }
+            #map { width: 100%; height: 100%; z-index: 1; }
+            #info {
+                position: absolute;
+                left 0;
+                bottom: 0;
+                z-index: 2;
+                padding: 8px 12px;
+                background-color: rgba(0,0,0,.8);
+                color:#fff;
+                font-size:13px;
+                font-family: helvetica;
+            }
+            .popup .profile {
+                float: left;
+                margin: 5px;
+            }
+            .clearfix {
+                *zoom: 1;
+            }
+            .clearfix:before {
+                display: table;
+                content: "";
+                line-height: 0;
+            }
+            .clearfix:after {
+                clear: both;
+                display: table;
+                content: "";
+                line-height: 0;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="map"></div>
+        <div id="info">
+            TwitterHose - Look Ma, No Polling!
+        </div>
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="assets/js/vendor/jquery-1.9.0.min.js"><\/script>')</script>
+        <script src="http://cdn.leafletjs.com/leaflet-0.5/leaflet.js"></script>
+        <script>
+        jQuery(function($) {
+            var map = L.map('map', {
+                center: [51.505, -0.09],
+                zoom: 3
+            });
+
+            L.tileLayer('http://{s}.tile.cloudmade.com/eb988b3db06a4c46bce4bc4877c1b7ad/997/256/{z}/{x}/{y}.png', {
+                attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
+                maxZoom: 18
+            }).addTo(map);
+
+            var ws = new WebSocket("ws://localhost:1337/");
+
+            ws.onerror = function(e) {
+                //console.log('Error', e);
+            };
+
+            ws.onopen = function() {
+                //console.log('Connected');
+            };
+
+            ws.onmessage = function(e) {
+                var obj = JSON.parse(e.data);
+
+                if (!obj.tweet) {
+                    return;
+                }
+
+                var tweet = obj.tweet;
+                
+                if (!tweet.geo) {
+                    return;
+                }
+
+                //console.log('Message', tweet);
+
+                L.marker(tweet.coordinates.coordinates)
+                    .addTo(map)
+                    .bindPopup('<div class="popup clearfix"><a href = "http://twitter.com/'+tweet.user.screen_name+'" class="profile"><img src="'+tweet.user.profile_image_url+'" /></a> <div class="text">'+tweet.text+'</div></div>', {
+                        autoPan: false
+                    })
+                    //.openPopup()
+                ;		
+            };
+        });
+        </script>
+    </body>
+</html>
