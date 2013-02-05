@@ -88,13 +88,14 @@
 
                 var tweet = obj.tweet;
                 
-                if (!tweet.geo) {
+                if (!tweet.coordinates) {
                     return;
                 }
 
                 //console.log('Message', tweet);
 
-                L.marker(tweet.coordinates.coordinates)
+                var latlng = new L.LatLng(tweet.coordinates.coordinates[1], tweet.coordinates.coordinates[0]);
+                L.marker(latlng)
                     .addTo(map)
                     .bindPopup('<div class="popup clearfix"><a href = "http://twitter.com/'+tweet.user.screen_name+'" class="profile"><img src="'+tweet.user.profile_image_url+'" /></a> <div class="text">'+tweet.text+'</div></div>', {
                         autoPan: false
