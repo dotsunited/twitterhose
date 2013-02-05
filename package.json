@@ -1,0 +1,10 @@
+{
+  "name": "Your-Project",
+  "version": "0.0.0",
+  "author": "Your-Company",
+  "devDependencies": {
+    "grunt": "~0.4.0rc7",
+    "grunt-contrib-uglify": "~0.1.1rc6",
+    "grunt-contrib-less": "~0.5.0rc7"
+  }
+}
