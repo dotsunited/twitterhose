@@ -27,6 +27,8 @@ $dataVars = $options;
 unset($dataVars['username'], $dataVars['password']);
 $data = http_build_query($dataVars, null, '&');
 
+$logger->info('Connecting to filter streaming api with ' . urldecode($data));
+
 $request = $httpClient->request('POST', 'https://stream.twitter.com/1.1/statuses/filter.json ', array(
     'Authorization' => 'Basic ' . base64_encode($options['username'] . ':' . $options['password']),
     'Content-type' => 'application/x-www-form-urlencoded',
@@ -49,8 +51,6 @@ $request->on('response', function ($response) use ($zmqSocket, &$buffer, $logger
 
         $buffer .= $data;
 
-        $logger->info("Buffer length is " . strlen($buffer));
-
         if (false === ($eol = strpos($buffer, "\r\n"))) {
             return;
         }
@@ -60,6 +60,10 @@ $request->on('response', function ($response) use ($zmqSocket, &$buffer, $logger
 
         $zmqSocket->send($tweet);
     });
+});
+
+$request->on('end', function ($error) use ($logger) {
+    $logger->info('Connection closed with "' . $error . '"');
 });
 
 $request->end();
