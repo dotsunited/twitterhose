@@ -10,8 +10,7 @@ use Ratchet\MessageComponentInterface;
 class TweetPusher implements MessageComponentInterface
 {
     private $logger;
-    protected $clients;
-    protected $buffer = '';
+    private $clients;
 
     public function __construct(LoggerInterface $logger = null)
     {
@@ -24,25 +23,24 @@ class TweetPusher implements MessageComponentInterface
         $tweet = json_decode($data, true);
 
         if (isset($tweet['limit'])) {
-            // It's a limit response
-            $this->logger->info("Skipping limit response ($data)");
+            $this->logger->debug("Skipping limit response ($data)");
 
             return;
         }
 
-        /*$numClients = count($this->clients);
+        $numClients = count($this->clients);
 
-        $this->logger->info(
+        $this->logger->debug(
             sprintf(
                 'Sending tweet "%s" to %d connection%s',
                 $tweet['id'],
                 $numClients,
                 $numClients == 1 ? '' : 's'
             )
-        );*/
+        );
 
         $msg = json_encode(array(
-            'type' => 'tweet',
+            'type'  => 'tweet',
             'tweet' => $tweet,
         ));
 
@@ -55,17 +53,17 @@ class TweetPusher implements MessageComponentInterface
     {
         $this->clients->attach($conn);
 
-        $this->logger->info("New connection! ({$conn->resourceId})");
+        $this->logger->info("New connection ({$conn->resourceId})");
     }
 
     public function onMessage(ConnectionInterface $conn, $msg)
     {
         $error = json_encode(array(
-           'type' => 'error',
+            'type'    => 'error',
             'message' => 'You are not allowed to make calls',
         ));
 
-        $this->logger->info("Unexpected reception of message \"{$msg}\" from connection {$conn->resourceId}");
+        $this->logger->notice("Unexpected reception of message \"{$msg}\" from connection {$conn->resourceId}");
 
         $conn->send($error)->close();
     }
