@@ -37,8 +37,9 @@ module.exports = function(grunt) {
 
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-watch');
 
   // Default task.
-  grunt.registerTask('default', ['less', 'uglify']);
+  grunt.registerTask('default', ['less', 'uglify', 'watch']);
 
 };
